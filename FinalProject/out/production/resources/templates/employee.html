@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <style>
+        td {
+            width: 200px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        table, th, td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<a th:href="@{/logout}">Logout</a>
+
+<span th:text="${notification}"/>
+<h1>Products:</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>SportCategory</th>
+        <th>TypeCategory</th>
+        <th>Description</th>
+        <th>Stock</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.sportCategory}"></td>
+        <td th:text="${product.typeCategory}"></td>
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.stock}"></td>
+        <td th:text="${product.price}"></td>
+    </tr>
+</table>
+
+<hr/>
+
+<div class="container">
+    <form th:action="@{/employee}" th:object="${productDTO}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <div class="form-group">
+            <label for="idProd" class="col-sm-4 control-label">Id:</label>
+            <div class="col-sm-811">
+                <input type="text" name="idProd" id="idProd" th:field="*{id}" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="name" class="col-sm-4 control-label">ProductName:</label>
+            <div class="col-sm-8">
+                <input type="text" name="name" id="name" th:field="*{name}" class="form-control"/>
+            </div>
+        </div>
+        <label for="sportCategory" class="col-sm-4 control-label">ProductSportCategory:</label>
+        <div class="col-sm-8">
+        <select name="sportCategory" id="sportCategory" th:field="*{sportCategory}">
+            <option value="Football">Football</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Running">Running</option>
+        </select>
+        </div>
+        <label for="typeCategory" class="col-sm-4 control-label">ProductTypeCategory:</label>
+        <div class="col-sm-8">
+            <select name="typeCategory" id="typeCategory" th:field="*{typeCategory}">
+                <option value="Ball">Ball</option>
+                <option value="Racquet">Racquet</option>
+                <option value="Shoes">Shoes</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-sm-4 control-label">ProductDescription:</label>
+            <div class="col-sm-811">
+                <input type="text" name="description" id="description" th:field="*{description}" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="stock" class="col-sm-4 control-label">ProductStock:</label>
+            <div class="col-sm-811">
+                <input type="number" name="stock" id="stock" th:field="*{stock}" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="price" class="col-sm-4 control-label">ProductDescription:</label>
+            <div class="col-sm-811">
+                <input type="number" name="price" id="price" step="0.1" th:field="*{price}" class="form-control"/>
+            </div>
+        </div>
+        <input type="submit" class="button" name="addProduct" value="AddNewProduct" />
+        <input type="submit" class="button" name="viewProducts" value="ViewProducts" />
+        <input type="submit" class="button" name="deleteProduct" value="DeleteProductById" />
+        <input type="submit" class="button" name="updateProduct" value="UpdateProductDetails" />
+    </form>
+</div>
+</body>
+</html>
