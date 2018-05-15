@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <style>
+        td {
+            width: 200px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        table, th, td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<a th:href="@{/logout}">Logout</a>
+<div><a th:href="@{/backToClientMenu}">BackToClientMenu</a></div>
+
+<div><h1><font color="green"><span th:text="${helloMessage}"/></font></h1></div>
+<span th:text="${notification}"/>
+<h2>CreditCards:</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>ClientId</th>
+        <th>ClientName</th>
+        <th>Balance</th>
+        <th>BankName</th>
+        <th>CardNumber</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="creditCard : ${creditCards}">
+        <td th:text="${creditCard.id}"></td>
+        <td th:text="${creditCard.client.id}"></td>
+        <td th:text="${creditCard.client.username}"></td>
+        <td th:text="${creditCard.balance}"></td>
+        <td th:text="${creditCard.bankName}"></td>
+        <td th:text="${creditCard.cardNr}"></td>
+    </tr>
+</table>
+
+<hr/>
+
+<div class="container">
+    <form th:action="@{/creditCardMenu}" th:object="${creditCardDTO}" method="post" >
+        <div class="form-group">
+            <label for="idCredit" class="col-sm-4 control-label">Id:</label>
+            <div class="col-sm-811">
+                <input type="text" name="idCredit" id="idCredit" th:field="*{id}" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="balance" class="col-sm-4 control-label">Balance:</label>
+            <div class="col-sm-8">
+                <input type="text" name="balance" id="balance" th:field="*{balance}" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cardNr" class="col-sm-4 control-label">CardNumber:</label>
+            <div class="col-sm-811">
+                <input type="text" name="cardNr" id="cardNr" th:field="*{cardNr}" class="form-control"/>
+            </div>
+        </div>
+        <label for="bankName" class="col-sm-4 control-label">BankName:</label>
+        <div class="col-sm-8">
+            <select name="bankName" id="bankName" th:field="*{bankName}">
+                <option value="Raiffeisen">Raiffeisen</option>
+                <option value="BT">BT</option>
+                <option value="MasterCard">MasterCard</option>
+            </select>
+        </div>
+        <input type="submit" class="button" name="addCreditCard" value="AddNewCreditCard" />
+        <input type="submit" class="button" name="viewCreditCard" value="ViewYourCreditCards" />
+        <input type="submit" class="button" name="deleteCreditCard" value="DeleteCreditById" />
+    </form>
+</div>
+</body>
+</html>

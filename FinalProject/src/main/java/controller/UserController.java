@@ -55,18 +55,15 @@ public class UserController implements WebMvcConfigurer {
             return "redirect:/login";
         }
     }
-
-    @RequestMapping(value="/login",params = "createACC",method=RequestMethod.POST)
-    public String regg(Model model)
-    {
-        return "redirect:/registration";
-
-    }
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth.getName());
+        System.out.println("gigel");
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            System.out.println(auth.getName());
+            System.out.println("gigel");
         }
         return "redirect:/login";
     }

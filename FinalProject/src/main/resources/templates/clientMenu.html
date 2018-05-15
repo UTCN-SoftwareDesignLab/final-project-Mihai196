@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <style>
+        td {
+            width: 200px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        table, th, td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+    <style>
+        .button {
+    background-color: #4CAF50;
+    border: none;
+    color: black;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    }
+    .button:hover {
+    background-color: green;
+    }
+    </style>
+    <style>
+        body
+        {
+            background-color: #D3D3D3;
+        }
+    </style>
+
+</head>
+<body>
+<a th:href="@{/logout}">Logout</a>
+
+<div><h2><font color="red"><span th:text="${helloMessage}"/></font></h2></div>
+<div><h3><font color="black"><span th:text="${options}"/></font></h3></div>
+<span th:text="${notification}"/>
+<div class="container">
+    <form th:action="@{/clientMenu}"  method="post" >
+        <input type="submit" class="button" name="addCreditCard" value="AddNewCreditCard" />
+        <input type="submit" class="button" name="buyProducts" value="BuyProducts" />
+        <input type="submit" class="button" name="giveRating" value="GiveRatingToProducts" />
+    </form>
+</div>
+</body>
+</html>

@@ -4,6 +4,8 @@ import dto.ProductDTO;
 import model.Product;
 import model.validation.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +23,9 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employee", method = RequestMethod.GET)
     public String showPage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth.getName());
+        model.addAttribute("helloMessage","Hello " +auth.getName());
         model.addAttribute("productDTO", new ProductDTO());
         model.addAttribute("products", productService.findAllProducts());
         return "employee";

@@ -39,11 +39,14 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
     @Override
     public void deleteProductOrder(Long id) {
+        ProductOrder productOrder=new ProductOrderBuilder().setId(id).build();
+        productOrderRepository.delete(productOrder);
 
     }
 
     @Override
     public List<ProductOrder> findAllProductOrders() {
-        return null;
+
+        return productOrderRepository.findAll();
     }
 }
