@@ -1,0 +1,41 @@
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+.star1{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star2{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star3{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star4{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star5{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+
+.cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1) grayscale(.5) opacity(.8);
+           -moz-filter: brightness(1) grayscale(.5) opacity(.8);
+                filter: brightness(1) grayscale(.5) opacity(.8);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.6) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.6) grayscale(.5) opacity(.9);
+            filter: brightness(1.6) grayscale(.5) opacity(.9);
+}
+
+/* Extras */
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}

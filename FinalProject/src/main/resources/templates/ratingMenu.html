@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Star ratings</title>
+    <style>
+        td {
+            width: 200px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        table, th, td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+    <style>
+        .button {
+    background-color: #4CAF50;
+    border: none;
+    color: black;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    }
+    .button:hover {
+    background-color: green;
+    }
+    </style>
+    <style>
+        body
+        {
+            background-color: #FFFFFF;
+        }
+    </style>
+    <style>
+        .cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+.star1{background-image:url(http://i.gr-assets.com/images/S/compressed.photo.goodreads.com/hostedimages/1420687595i/13252843.jpg);}
+.star2{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star3{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star4{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+.star5{background-image:url(http://1.bp.blogspot.com/-cN3q5Q0hlC8/VIrBO5OvicI/AAAAAAAAGHw/fOLeMxQX2iA/s1600/Star-Color-8.jpg);}
+
+.cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1) grayscale(.5) opacity(.8);
+           -moz-filter: brightness(1) grayscale(.5) opacity(.8);
+                filter: brightness(1) grayscale(.5) opacity(.8);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.6) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.6) grayscale(.5) opacity(.9);
+            filter: brightness(1.6) grayscale(.5) opacity(.9);
+}
+
+/* Extras */
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+    </style>
+</head>
+<body>
+<a th:href="@{/logout}">Logout</a>
+<div><a th:href="@{/backToClientMenu}">BackToClientMenu</a></div>
+<h3><span th:text="${notification}"/></h3>
+
+<h2>YourReviews:</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>ProductId</th>
+        <th>ProductName</th>
+        <th>ReviewDescription</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="review : ${reviews}">
+        <td th:text="${review.id}"></td>
+        <td th:text="${review.product.id}"></td>
+        <td th:text="${review.product.name}"></td>
+        <td th:text="${review.description}"></td>
+        <td th:text="${review.value}"></td>
+    </tr>
+</table>
+
+<hr/>
+<form th:action="@{/ratingMenu}" method="post">
+    <div class="form-group">
+        <label for="description" class="col-sm-4 control-label">ProductDescription:</label>
+        <div class="col-sm-811">
+            <input type="text" name="description" id="description" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="name" class="col-sm-4 control-label">ProductName:</label>
+        <div class="col-sm-8">
+            <input type="text" name="name" id="name" />
+        </div>
+    </div>
+    <label>How many stars would you rate this product?</label>
+    <div class="cc-selector">
+        <input id="star1" type="radio" name="rating" value="1" />
+        <label class="drinkcard-cc star1" for="star1"> 1&#9734 </label>
+        <input id="star2" type="radio" name="rating" value="2" />
+        <label class="drinkcard-cc star2" for="star2"> 2&#9734 </label>
+        <input id="star3" type="radio" name="rating" value="3" />
+        <label class="drinkcard-cc star3" for="star3"> 3&#9734</label>
+        <input id="star4" type="radio" name="rating" value="3" />
+        <label class="drinkcard-cc star4" for="star4"> 4&#9734 </label>
+        <input id="star5" type="radio" name="rating" value="3" />
+        <label class="drinkcard-cc star5" for="star5"> 5&#9734</label>
+    </div>
+
+    <input type="submit" class="button" name="addRating" value="AddReview" />
+    <input type="submit" class="button" name="viewRatings" value="ViewYourReviews" />
+</form>
+</body>
+</html>

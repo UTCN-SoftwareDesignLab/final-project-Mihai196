@@ -45,7 +45,7 @@
 
 <div><h2><font color="red"><span th:text="${helloMessage}"/></font></h2></div>
 <div><h3><font color="black"><span th:text="${options}"/></font></h3></div>
-<span th:text="${notification}"/>
+<font color="red"><h3><span th:text="${notification}"/></h3></font>
 <div class="container">
     <form th:action="@{/clientMenu}"  method="post" >
         <input type="submit" class="button" name="addCreditCard" value="AddNewCreditCard" />

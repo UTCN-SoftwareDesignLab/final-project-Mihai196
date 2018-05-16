@@ -2,6 +2,7 @@ package model.builder;
 
 import model.Product;
 import model.ProductOrder;
+import model.User;
 
 public class ProductOrderBuilder {
 
@@ -24,6 +25,11 @@ public class ProductOrderBuilder {
     public ProductOrderBuilder setQuantity(int quantity)
     {
         productOrder.setQuantity(quantity);
+        return this;
+    }
+    public ProductOrderBuilder setClient(User client)
+    {
+        productOrder.setClient(client);
         return this;
     }
     public ProductOrder build()

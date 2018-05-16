@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface ProductOrderService {
 
-    Notification<Boolean> addProductOrder(Product product, int quantity);
+    Notification<Boolean> addProductOrder(Long productId,Long clientId, int quantity);
     void deleteProductOrder(Long id);
     List<ProductOrder> findAllProductOrders();
+    List<ProductOrder> findByClient(Long clientId);
 
 }

@@ -23,6 +23,10 @@ public class ProductOrderValidator {
         {
             errors.add("There are not enough products on the stock");
         }
+        if(!productOrder.getClient().getRole().equals("client"))
+        {
+            errors.add("Orders can only be made by clients");
+        }
         return errors.isEmpty();
     }
 }

@@ -14,6 +14,18 @@ public class ProductOrder {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private User client;
+
+    public User getClient() {
+        return client;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
     private int quantity;
 
     public Long getId() {
