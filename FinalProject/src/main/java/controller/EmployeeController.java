@@ -33,10 +33,9 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employee", params = "viewProducts", method = RequestMethod.POST)
     public String listProducts(Model model) {
-        model.addAttribute("productDTO", new ProductDTO());
         final List<Product> products = productService.findAllProducts();
         model.addAttribute("products", products);
-        return "employee";
+        return "redirect:/employee";
     }
 
     @RequestMapping(value = "/employee", params = "addProduct", method = RequestMethod.POST)
@@ -49,7 +48,7 @@ public class EmployeeController {
             return "employee";
         } else {
             model.addAttribute("notification", "New product was added successfully");
-            return "employee";
+            return "redirect:/employee";
         }
     }
     @RequestMapping(value = "/employee", params = "updateProduct", method = RequestMethod.POST)
@@ -72,6 +71,11 @@ public class EmployeeController {
         productService.deleteProduct(productDTO.getId());
         model.addAttribute("notification", "Product was deleted successfully");
         return "employee";
+    }
+    @RequestMapping(value = "/employee",params = "goToGoogle",method = RequestMethod.POST)
+    public String goToGoogle(Model model)
+    {
+        return "redirect:/www.google.com/";
     }
 
 

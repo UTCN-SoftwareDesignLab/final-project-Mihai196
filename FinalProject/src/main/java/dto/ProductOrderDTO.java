@@ -5,6 +5,7 @@ public class ProductOrderDTO {
     private Long id;
     private Long productId;
     private int quantity;
+    private String accountString;
 
     public Long getId() {
         return id;
@@ -28,5 +29,13 @@ public class ProductOrderDTO {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getAccountString() {
+        return accountString;
+    }
+
+    public void setAccountString(String accountString) {
+        this.accountString = accountString;
     }
 }

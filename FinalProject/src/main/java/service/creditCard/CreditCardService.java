@@ -12,5 +12,6 @@ public interface CreditCardService {
     void deleteCreditCard(Long id);
     List<CreditCard> findAll();
     List<CreditCard> findByClient(Long clientId);
+    CreditCard findById(long id);
 
 }

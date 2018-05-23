@@ -1,5 +1,6 @@
 package service.productOrder;
 
+import model.CommandOrder;
 import model.Product;
 import model.ProductOrder;
 import model.User;
@@ -8,6 +9,7 @@ import model.validation.Notification;
 import model.validation.ProductOrderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import repository.commandOrder.CommandOrderRepository;
 import repository.product.ProductRepository;
 import repository.productOrder.ProductOrderRepository;
 import repository.user.UserRepository;
@@ -27,18 +29,25 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CommandOrderRepository commandOrderRepository;
+
     @Override
-    public Notification<Boolean> addProductOrder(Long productId,Long clientId, int quantity) {
+    public Notification<Boolean> addProductOrder(Long productId,Long clientId,Long commandOrderId, int quantity) {
         Optional<Product> productOptional=productRepository.findById(productId);
         Optional<User> clientOptional=userRepository.findById(clientId);
+        Optional<CommandOrder> commandOrderOptional=commandOrderRepository.findById(commandOrderId);
         Product product=new Product();
         User client=new User();
-        if(productOptional.isPresent()&&clientOptional.isPresent()) {
+        CommandOrder commandOrder=new CommandOrder();
+        if(productOptional.isPresent()&&clientOptional.isPresent()&&commandOrderOptional.isPresent()) {
             product = productOptional.get();
             client=clientOptional.get();
+            commandOrder=commandOrderOptional.get();
         }
 
-        ProductOrder productOrder=new ProductOrderBuilder().setProduct(product).setClient(client).setQuantity(quantity).build();
+        ProductOrder productOrder=
+                new ProductOrderBuilder().setProduct(product).setClient(client).setQuantity(quantity).setCommandOrder(commandOrder).build();
         ProductOrderValidator productOrderValidator=new ProductOrderValidator();
         boolean productOrderValidation=productOrderValidator.validate(productOrder);
         Notification<Boolean> productOrderNotification=new Notification<>();
@@ -77,5 +86,10 @@ public class ProductOrderServiceImpl implements ProductOrderService {
             client=clientOptional.get();
         }
         return productOrderRepository.findByClient(client);
+    }
+
+    @Override
+    public List<ProductOrder> findByCommandOrder(CommandOrder commandOrder) {
+        return productOrderRepository.findByCommandOrder(commandOrder);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import repository.creditCard.CreditCardRepository;
 import repository.user.UserRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,4 +95,11 @@ public class CreditCardServiceImpl implements CreditCardService{
         }
         return creditCardRepository.findByClient(client);
     }
+
+    @Override
+    public CreditCard findById(long id) {
+        Optional<CreditCard> creditCardOptional=creditCardRepository.findById(id);
+        return creditCardOptional.orElse(null);
+    }
+
 }

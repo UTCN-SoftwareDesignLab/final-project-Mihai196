@@ -1,5 +1,6 @@
 package model.builder;
 
+import model.CommandOrder;
 import model.Product;
 import model.ProductOrder;
 import model.User;
@@ -30,6 +31,11 @@ public class ProductOrderBuilder {
     public ProductOrderBuilder setClient(User client)
     {
         productOrder.setClient(client);
+        return this;
+    }
+    public ProductOrderBuilder setCommandOrder(CommandOrder commandOrder)
+    {
+        productOrder.setCommandOrder(commandOrder);
         return this;
     }
     public ProductOrder build()

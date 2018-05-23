@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TrackOrder</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <style>
+        td {
+            width: 100px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        table, th, td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+    <style>
+        .button {
+    background-color: #4CAF50;
+    border: none;
+    color: black;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    }
+    .button:hover {
+    background-color: green;
+    }
+    </style>
+    <style>
+.alert {
+    padding: 20px;
+    background-color: green;
+    color: white;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
+    <style>
+        body
+        {
+            background-color: #D3D3D3;
+        }
+    </style>
+</head>
+<body>
+<a th:href="@{/logout}">Logout</a>
+<div><a th:href="@{/backToClientMenu}">BackToClientMenu</a></div>
+
+<div><h1><font color="green"><span th:text="${helloMessage}"/></font></h1></div>
+<h3><span th:text="${notification}"/></h3>
+<div class="container">
+    <form th:action="@{/trackOrder}" method="post" >
+        <div class="form-group">
+            <label for="idOrderTrack" class="col-sm-4 control-label">IdForTrackingOrder:</label>
+            <div class="col-sm-811">
+                <input type="text" name="idOrderTrack" id="idOrderTrack" class="form-control"/>
+            </div>
+        </div>
+        <input type="submit" class="button" name="trackOrderBtn" value="TrackOrderByIdGenerated" />
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span th:text="${AlertMessageTrack}"/>
+        </div>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>ProductId</th>
+                <th>ProductName</th>
+                <th>ProductPrice</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="productOrder : ${productOrders}">
+                <td th:text="${productOrder.id}"></td>
+                <td th:text="${productOrder.product.id}"></td>
+                <td th:text="${productOrder.product.name}"></td>
+                <td th:text="${productOrder.product.price}"></td>
+                <td th:text="${productOrder.quantity}"></td>
+            </tr>
+        </table>
+
+        <hr/>
+
+
+    </form>
+</div>
+</body>
+</html>

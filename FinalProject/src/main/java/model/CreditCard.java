@@ -19,6 +19,16 @@ public class CreditCard {
 
     private Long cardNr;
 
+    @Override
+    public String toString() {
+        return "CreditCard{" +
+                "id=" + id +
+                ", balance=" + balance +
+                ", bankName='" + bankName + '\'' +
+                ", cardNr=" + cardNr +
+                '}';
+    }
+
     public Long getCardNr() {
         return cardNr;
     }

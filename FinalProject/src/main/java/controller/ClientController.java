@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.commandOrder.CommandOrderService;
 import service.creditCard.CreditCardService;
 import service.product.ProductService;
 import service.productOrder.ProductOrderService;
@@ -24,10 +25,10 @@ import service.user.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ClientController {
@@ -47,15 +48,16 @@ public class ClientController {
     @Autowired
     private RatingService ratingService;
 
+    @Autowired
+    private CommandOrderService commandOrderService;
+
     @RequestMapping(value = "/clientMenu", method = RequestMethod.GET)
     public String showUserOps(Model model, HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(auth.getName());
-        HttpSession session=request.getSession();
+        HttpSession session = request.getSession();
         List<ProductOrder> productOrders = (ArrayList<ProductOrder>) session.getAttribute("cartList");
-        if(productOrders!=null)
-        {
-            model.addAttribute("notification","You have not finalized your command." +
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (productOrders != null) {
+            model.addAttribute("notification", "You have not finalized your command." +
                     "Make sure you finalize it before you log out.");
         }
         model.addAttribute("helloMessage", "Hello " + auth.getName());
@@ -78,11 +80,22 @@ public class ClientController {
         return "redirect:/ratingMenu";
     }
 
+    @RequestMapping(value = "/clientMenu", params = "trackOrder", method = RequestMethod.POST)
+    public String goToTrackOrder(Model model) {
+        return "redirect:/trackOrder";
+    }
+
     @RequestMapping(value = "/creditCardMenu", method = RequestMethod.GET)
     public String showCreditCardMenu(Model model) {
         model.addAttribute("creditCardDTO", new CreditCardDTO());
         return "/creditCardMenu";
     }
+    @RequestMapping(value="/trackOrder",method = RequestMethod.GET)
+    public String showTrackOrder(Model model)
+    {
+        return "/trackOrder";
+    }
+
     @RequestMapping(value = "/ratingMenu", method = RequestMethod.GET)
     public String showRatingMenu(Model model) {
         return "/ratingMenu";
@@ -90,6 +103,12 @@ public class ClientController {
 
     @RequestMapping(value = "/productOrderMenu", method = RequestMethod.GET)
     public String showProductMenu(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<User> usersByUsername = userService.findByUsername(auth.getName());
+        User loggedUser = usersByUsername.get(0);
+        List<CreditCard> creditCards = creditCardService.findByClient(loggedUser.getId());
+        List<String> creditCardsString = creditCards.stream().map(e -> e.getId().toString()).collect(Collectors.toList());
+        model.addAttribute("databaseList", creditCardsString);
         model.addAttribute("productOrderDTO", new ProductOrderDTO());
         return "productOrderMenu";
     }
@@ -141,7 +160,7 @@ public class ClientController {
         productOrders.add(productOrder);
         session.setAttribute("cartList", productOrders);
         model.addAttribute("notification", "New order was added to shopping cart");
-        return "/productOrderMenu";
+        return "productOrderMenu";
     }
 
     @RequestMapping(value = "/productOrderMenu", params = "viewShoppingCart", method = RequestMethod.POST)
@@ -157,68 +176,92 @@ public class ClientController {
     }
 
     @RequestMapping(value = "/productOrderMenu", params = "finalizeCommand", method = RequestMethod.POST)
-    public String finalizeCommand(Model model, HttpServletRequest request) {
+    public String finalizeCommand(Model model, HttpServletRequest request,@RequestParam("dropOperator") String creditCardIdd) {
+        System.out.println(creditCardIdd.length());
         model.addAttribute("productOrderDTO", new ProductOrderDTO());
         HttpSession session = request.getSession();
         List<ProductOrder> productOrders = (ArrayList<ProductOrder>) session.getAttribute("cartList");
-        String allErrors="";
+        double totalAmountToBePaid = 0;
+        for(ProductOrder productOrder:productOrders)
+        {
+            totalAmountToBePaid += productOrder.getQuantity() * productOrder.getProduct().getPrice();
+        }
+        long creditCardId=Long.parseLong(creditCardIdd);
+        CreditCard creditCard=creditCardService.findById(creditCardId);
+        System.out.println("Balance before"+creditCard.getBalance());
+        if(totalAmountToBePaid<creditCard.getBalance())
+        {
+            Notification<Boolean> creditCardNotification=creditCardService.updateBalance(creditCard.getId(),totalAmountToBePaid);
+        }
+        CreditCard updatedCreditCard=creditCardService.findById(creditCardId);
+        System.out.println("Balance after"+updatedCreditCard.getBalance());
+
+        String allErrors = "";
+        Notification<CommandOrder> commandOrderNotification=
+                commandOrderService.addCommandOrder(new java.sql.Date(System.currentTimeMillis()),"FANCourier");
+        CommandOrder commandOrder=commandOrderNotification.getResult();
         for (ProductOrder productOrder : productOrders) {
             Notification<Boolean> orderNotification = productOrderService.addProductOrder(productOrder.getProduct().getId(),
-                    productOrder.getClient().getId(),
+                    productOrder.getClient().getId(),commandOrder.getId(),
                     productOrder.getQuantity());
-            Notification<Boolean> productNotification=productService.updateProductStock(
+            Notification<Boolean> productNotification = productService.updateProductStock(
                     productOrder.getProduct().getId(),
-                    productOrder.getProduct().getStock()-productOrder.getQuantity());
-            if (orderNotification.hasErrors()) {
-                allErrors+=orderNotification.getFormattedErrors();
-            }
-            if(productNotification.hasErrors())
-            {
-                allErrors+=productNotification.getFormattedErrors();
-            }
+                    productOrder.getProduct().getStock() - productOrder.getQuantity());
+            if (orderNotification.hasErrors()) allErrors += orderNotification.getFormattedErrors();
+            else if (productNotification.hasErrors())
+                allErrors += productNotification.getFormattedErrors();
         }
 
-        if(!allErrors.equals("")) {
-            model.addAttribute("notification", allErrors);
-        }
-        else
-        {
-            model.addAttribute("notification","Shopping cart was processed successfully");
-            List<ProductOrder> productOrders1=new ArrayList<>();
-            session.setAttribute("cartList",productOrders1);
+        if (!allErrors.equals("")) model.addAttribute("notification", allErrors);
+        else {
+            String formatString="Shopping cart was processed successfully " +
+                    " Total amount to be paid was " + totalAmountToBePaid +
+                    " Money left on the credit card "+updatedCreditCard.getBalance() +
+                    " Generated Id if you want to track your command order is: "+commandOrder.getId();
+            model.addAttribute("AlertMessage", formatString);
+            List<ProductOrder> productOrders1 = new ArrayList<>();
+            session.setAttribute("cartList", productOrders1);
         }
 
-        return "/productOrderMenu";
-
+        return "productOrderMenu";
     }
-    @RequestMapping(value = "/ratingMenu", params = "addRating",method = RequestMethod.POST)
-    public String addRating(Model model, @RequestParam("rating") int value,@RequestParam("description") String description,
-            @RequestParam("name") String name)
-    {
+
+    @RequestMapping(value = "/ratingMenu", params = "addRating", method = RequestMethod.POST)
+    public String addRating(Model model, @RequestParam("rating") int value, @RequestParam("description") String description,
+                            @RequestParam("name") String name) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List<User> usersByUsername = userService.findByUsername(auth.getName());
         User loggedUser = usersByUsername.get(0);
         System.out.println(value);
-        Notification<Boolean> ratingNotification=ratingService.addRating(loggedUser,name,value,description);
-        if(ratingNotification.hasErrors())
-        {
-            model.addAttribute("notification",ratingNotification.getFormattedErrors());
-        }
-        else
-        {
-            model.addAttribute("notification","Review was added successfully");
+        Notification<Boolean> ratingNotification = ratingService.addRating(loggedUser, name, value, description);
+        if (ratingNotification.hasErrors()) {
+            model.addAttribute("notification", ratingNotification.getFormattedErrors());
+        } else {
+            model.addAttribute("notification", "Review was added successfully");
         }
         return "ratingMenu";
     }
-    @RequestMapping(value = "/ratingMenu" ,params = "viewRatings",method = RequestMethod.POST)
-    public String viewYourRatings(Model model)
-    {
+
+    @RequestMapping(value = "/ratingMenu", params = "viewRatings", method = RequestMethod.POST)
+    public String viewYourRatings(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List<User> usersByUsername = userService.findByUsername(auth.getName());
         User loggedUser = usersByUsername.get(0);
-        List<Rating> ratings=ratingService.findByClient(loggedUser);
-        model.addAttribute("reviews",ratings);
+        List<Rating> ratings = ratingService.findByClient(loggedUser);
+        model.addAttribute("reviews", ratings);
         return "ratingMenu";
+    }
+
+    @RequestMapping(value = "/trackOrder",params = "trackOrderBtn",method = RequestMethod.POST)
+    public String trackYourOrder(Model model,@RequestParam("idOrderTrack") long orderId)
+    {
+        CommandOrder commandOrder=commandOrderService.findById(orderId);
+        List<ProductOrder> productOrders=productOrderService.findByCommandOrder(commandOrder);
+        model.addAttribute("AlertMessageTrack"," Your command is scheduled to be delivered at "
+                +commandOrder.getExpectedArrivalDate() + " Delivered by " +commandOrder.getDeliveryCompany()
+                +" You can see your products below: ");
+        model.addAttribute("productOrders",productOrders);
+        return "/trackOrder";
     }
 
 }

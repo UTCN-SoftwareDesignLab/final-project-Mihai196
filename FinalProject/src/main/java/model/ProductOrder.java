@@ -18,6 +18,19 @@ public class ProductOrder {
     @JoinColumn(name = "client_id")
     private User client;
 
+    @ManyToOne
+    @JoinColumn(name = "command_id")
+    private CommandOrder commandOrder;
+
+
+    public CommandOrder getCommandOrder() {
+        return commandOrder;
+    }
+
+    public void setCommandOrder(CommandOrder commandOrder) {
+        this.commandOrder = commandOrder;
+    }
+
     public User getClient() {
         return client;
     }

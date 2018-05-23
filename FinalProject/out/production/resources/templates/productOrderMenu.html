@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <style>
         td {
-            width: 200px;
+            width: 100px;
         }
 
         th {
@@ -32,6 +32,28 @@
     background-color: green;
     }
     </style>
+    <style>
+.alert {
+    padding: 20px;
+    background-color: green;
+    color: white;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
     <style>
         body
         {
@@ -71,6 +93,10 @@
 <hr/>
 
 <div class="container">
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${AlertMessage}"/>
+    </div>
     <form th:action="@{/productOrderMenu}" th:object="${productOrderDTO}" method="post" >
         <div class="form-group">
             <label for="idOrder" class="col-sm-4 control-label">Id:</label>
@@ -94,6 +120,46 @@
         <input type="submit" class="button" name="viewShoppingCart" value="ViewShoppingCart" />
         <input type="submit" class="button" name="finalizeCommand" value="FinalizeCommand"/>
         <input type="submit" class="button" name="deleteFromShoppingCarte" value="DeleteOrderById" />
+        <div>
+            <font color="green"> <h4>Available credit cards numbers from which you can finalize payment:</h4></font>
+                <select class="form-control"  id="dropOperator" name="dropOperator">
+                    <option th:each="value : ${databaseList}"  th:text="${value}" ></option>
+                </select>
+        </div>
+        <div class="form-group">
+            <label for="idOrderTrack" class="col-sm-4 control-label">IdForTrackingOrder:</label>
+            <div class="col-sm-811">
+                <input type="text" name="idOrderTrack" id="idOrderTrack" class="form-control"/>
+            </div>
+        </div>
+        <input type="submit" class="button" name="trackOrder" value="TrackOrderByIdGenerated" />
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span th:text="${AlertMessageTrack}"/>
+        </div>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>ProductId</th>
+                <th>ProductName</th>
+                <th>ProductPrice</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="productOrder : ${productOrders}">
+                <td th:text="${productOrder.id}"></td>
+                <td th:text="${productOrder.product.id}"></td>
+                <td th:text="${productOrder.product.name}"></td>
+                <td th:text="${productOrder.product.price}"></td>
+                <td th:text="${productOrder.quantity}"></td>
+            </tr>
+        </table>
+
+        <hr/>
+
+
     </form>
 </div>
 </body>
