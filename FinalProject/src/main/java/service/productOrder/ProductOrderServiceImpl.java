@@ -78,13 +78,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     }
 
     @Override
-    public List<ProductOrder> findByClient(Long clientId) {
-        Optional<User> clientOptional=userRepository.findById(clientId);
-        User client=new User();
-        if(clientOptional.isPresent())
-        {
-            client=clientOptional.get();
-        }
+    public List<ProductOrder> findByClient(User client) {
         return productOrderRepository.findByClient(client);
     }
 

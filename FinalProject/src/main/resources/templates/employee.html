@@ -38,6 +38,12 @@
             border: 1px solid black;
         }
     </style>
+    <style>
+        input[type=text] {
+    border: 2px solid red;
+    border-radius: 4px;
+}
+    </style>
 </head>
 <body>
 <a th:href="@{/logout}">Logout</a>
@@ -126,7 +132,9 @@
         <input type="submit" class="button" name="viewProducts" value="ViewProducts" />
         <input type="submit" class="button" name="deleteProduct" value="DeleteProductById" />
         <input type="submit" class="button" name="updateProduct" value="UpdateProductDetails" />
-        <input type="submit" class="button" name="goToGoogle" value="GoToGoogle" />
+        <p>Generte Reports For Limited Stock Products</p>
+        <input type="submit" class="button" name="generatePDF" value="GeneratePDF" />
+        <input type="submit" class="button" name="generateCSV" value="GenerateCSV" />
     </form>
 </div>
 </body>

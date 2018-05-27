@@ -103,4 +103,16 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> optionalProduct=productRepository.findById(id);
         return optionalProduct.orElse(null);
     }
+
+    @Override
+    public List<Product> findBySportCategory(String sportCategory) {
+        return productRepository.findBySportCategory(sportCategory);
+    }
+
+    @Override
+    public List<Product> findByTypeCategory(String typeCategory) {
+        return productRepository.findByTypeCategory(typeCategory);
+    }
+
+
 }

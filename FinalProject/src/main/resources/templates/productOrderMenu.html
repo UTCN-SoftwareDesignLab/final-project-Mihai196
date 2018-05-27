@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Employee</title>
+    <title>ProductOrder</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <style>
         td {
@@ -60,6 +60,18 @@
             background-color: #D3D3D3;
         }
     </style>
+    <style>
+        .table1 {
+    width:1200px;
+   	margin:left;
+    font-size:15px;
+    border:1px solid #000;
+    border-collapse:collapse; }
+    .table1 th{
+    font-size:20px;
+    }
+    </style>
+
 </head>
 <body>
 <a th:href="@{/logout}">Logout</a>
@@ -67,8 +79,12 @@
 
 <div><h1><font color="green"><span th:text="${helloMessage}"/></font></h1></div>
 <h3><span th:text="${notification}"/></h3>
+<div class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <span th:text="${AlertMessage}"/>
+</div>
 <h2>ShoppingCart:</h2>
-<table border="1">
+<table border="1" >
     <thead>
     <tr>
         <th>Id</th>
@@ -89,76 +105,87 @@
         <td th:text="${productOrder.quantity}"></td>
     </tr>
 </table>
+<form th:action="@{/clearCart}"  method="post" >
+    <input type="submit" class="button" name="clearCart" value="ClearShoppingCart" />
+</form>
 
 <hr/>
-
-<div class="container">
-    <div class="alert">
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        <span th:text="${AlertMessage}"/>
+<form th:action="@{/productFilter}"  method="post" >
+    <label for="sportCategory" class="col-sm-4 control-label">ProductSportCategory:</label>
+    <div class="col-sm-8">
+        <select name="sportCategory" id="sportCategory" >
+            <option value="Football">Football</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Running">Running</option>
+        </select>
     </div>
-    <form th:action="@{/productOrderMenu}" th:object="${productOrderDTO}" method="post" >
-        <div class="form-group">
-            <label for="idOrder" class="col-sm-4 control-label">Id:</label>
-            <div class="col-sm-811">
-                <input type="text" name="idOrder" id="idOrder" th:field="*{id}" class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="productId" class="col-sm-4 control-label">ProductId:</label>
-            <div class="col-sm-8">
-                <input type="text" name="productId" id="productId" th:field="*{productId}" class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="quantity" class="col-sm-4 control-label">Quantity:</label>
-            <div class="col-sm-811">
-                <input type="text" name="quantity" id="quantity" th:field="*{quantity}" class="form-control"/>
-            </div>
-        </div>
-        <input type="submit" class="button" name="addToCart" value="AddToShoppingCart" />
-        <input type="submit" class="button" name="viewShoppingCart" value="ViewShoppingCart" />
+    <label for="typeCategory" class="col-sm-4 control-label">ProductTypeCategory:</label>
+    <div class="col-sm-8">
+        <select name="typeCategory" id="typeCategory">
+            <option value="Ball">Ball</option>
+            <option value="Racquet">Racquet</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Others">Others</option>
+        </select>
+    </div>
+    <input type="submit" class="button" name="filterBySport" value="FilterBySportCategory" />
+    <input type="submit" class="button" name="filterByType" value="FilterByType" />
+
+</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>SportCategory</th>
+        <th>TypeCategory</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}" >
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.sportCategory}"></td>
+        <td th:text="${product.typeCategory}"></td>
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.price}"></td>
+        <td>
+            <form action="#" th:action="@{/addFromTable}" method="post">
+                <input type="hidden" th:value = "${product.id}" name="productIdInsert" />
+                <p><input type="submit" class="button" value="AddProduct" name="AddProduct"/>
+            </form>
+        </td>
+    </tr >
+</table>
+<hr/>
+<div class="container">
+        <form th:action="@{/productOrderMenu}" th:object="${productOrderDTO}" method="post" >
+        <font color="green"> <h4>Available credit cards numbers from which you can finalize payment:</h4></font>
+        <select id="dropOperator" name="dropOperator">
+            <option th:each="value : ${databaseList}"  th:text="${value}" ></option>
+        </select>
         <input type="submit" class="button" name="finalizeCommand" value="FinalizeCommand"/>
-        <input type="submit" class="button" name="deleteFromShoppingCarte" value="DeleteOrderById" />
-        <div>
-            <font color="green"> <h4>Available credit cards numbers from which you can finalize payment:</h4></font>
-                <select class="form-control"  id="dropOperator" name="dropOperator">
-                    <option th:each="value : ${databaseList}"  th:text="${value}" ></option>
-                </select>
-        </div>
-        <div class="form-group">
-            <label for="idOrderTrack" class="col-sm-4 control-label">IdForTrackingOrder:</label>
-            <div class="col-sm-811">
-                <input type="text" name="idOrderTrack" id="idOrderTrack" class="form-control"/>
-            </div>
-        </div>
-        <input type="submit" class="button" name="trackOrder" value="TrackOrderByIdGenerated" />
-        <div class="alert">
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-            <span th:text="${AlertMessageTrack}"/>
-        </div>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>ProductId</th>
-                <th>ProductName</th>
-                <th>ProductPrice</th>
-                <th>Quantity</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="productOrder : ${productOrders}">
-                <td th:text="${productOrder.id}"></td>
-                <td th:text="${productOrder.product.id}"></td>
-                <td th:text="${productOrder.product.name}"></td>
-                <td th:text="${productOrder.product.price}"></td>
-                <td th:text="${productOrder.quantity}"></td>
-            </tr>
-        </table>
 
-        <hr/>
-
+        <p><font color="green"> <h4>Or maybe view a youtube review video of the product you want to order?</h4></font></p>
+            <label for="productName" >ProductNameYoutubeSearch:</label>
+                <input type="text" name="productName" id="productName" />
+        <input type="submit" class="button" name="searchYoutubeVideos" value="SearchYoutubeVideos"/>
+            <table border="1" class="table1">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Link</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="searchResult : ${searchResults}">
+                    <td th:text="${searchResult.title}"></td>
+                    <td> <a th:href="@{${searchResult.link}}">Video</a></td>
+                </tr>
+            </table>
 
     </form>
 </div>

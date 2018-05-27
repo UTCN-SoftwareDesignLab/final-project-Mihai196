@@ -1,5 +1,6 @@
 package controller;
 
+import model.ProductOrder;
 import model.User;
 import model.validation.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.productOrder.ProductOrderService;
 import service.user.UserService;
 
 import java.util.List;
@@ -18,6 +20,8 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ProductOrderService productOrderService;
     //User operations
     @RequestMapping(value = "/userOps", method = RequestMethod.GET)
     public String showUserOps(Model model) {
@@ -64,6 +68,16 @@ public class AdminController {
         Long id = Long.parseLong(idUser);
         userService.deleteUser(id);
         model.addAttribute("deleteMessage", "User with id " + id + " was deleted succesfully from the database");
+        return "/userOps";
+    }
+
+    @RequestMapping(value = "/userOps",params = "trackUser",method = RequestMethod.POST)
+    public String trackClient(Model model,@RequestParam("userTrack")String userTrack)
+    {
+        List<User> users=userService.findByUsername(userTrack);
+        User user=users.get(0);
+        List<ProductOrder> productOrders=productOrderService.findByClient(user);
+        model.addAttribute("productOrders",productOrders);
         return "/userOps";
     }
 }

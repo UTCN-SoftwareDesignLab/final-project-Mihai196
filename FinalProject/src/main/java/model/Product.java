@@ -68,6 +68,17 @@ public class Product {
         this.stock = stock;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sportCategory='" + sportCategory + '\'' +
+                ", stock=" + stock +
+                ", price=" + price +
+                '}';
+    }
+
     public double getPrice() {
         return price;
     }

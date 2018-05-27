@@ -38,14 +38,43 @@
             background-color: #D3D3D3;
         }
     </style>
+    <style>
+.alert {
+    padding: 20px;
+    background-color: red;
+    color: white;
+    <!--visibility:hidden;-->
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
 
 </head>
+
+
+
 <body>
 <a th:href="@{/logout}">Logout</a>
 
 <div><h2><font color="red"><span th:text="${helloMessage}"/></font></h2></div>
 <div><h3><font color="black"><span th:text="${options}"/></font></h3></div>
-<font color="red"><h3><span th:text="${notification}"/></h3></font>
+<div class="alert" id ="alertId">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <span  th:text="${AlertMessage}"/>
+</div>
 <div class="container">
     <form th:action="@{/clientMenu}"  method="post" >
         <input type="submit" class="button" name="addCreditCard" value="AddNewCreditCard" />

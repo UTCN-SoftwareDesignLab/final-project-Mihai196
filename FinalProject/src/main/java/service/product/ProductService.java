@@ -13,4 +13,6 @@ public interface ProductService {
     void deleteProduct(Long id);
     List<Product> findAllProducts();
     Product findById(Long id);
+    List<Product> findBySportCategory(String sportCategory);
+    List<Product> findByTypeCategory(String typeCategory);
 }

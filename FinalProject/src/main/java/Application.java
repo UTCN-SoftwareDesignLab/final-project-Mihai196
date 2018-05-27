@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("model")
 @EnableJpaRepositories({"repository.user","repository.product","repository.productOrder","repository.creditCard","repository.rating", "repository.commandOrder"})
 @ComponentScan({"model","repository.commandOrder","repository.creditCard","repository.user","repository.product","repository.productOrder","repository.rating",
-        "service.productOrder","service.user","service.product","service.creditCard","service.rating","service.commandOrder","controller","config"})
+        "service.productOrder","service.report","service.user","service.product","service.creditCard","service.rating","service.commandOrder","service.youtubeAPI","controller","config"})
 public class Application {
 
     public static void main(String []args)

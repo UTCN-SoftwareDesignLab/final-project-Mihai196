@@ -103,6 +103,38 @@
         <span th:text="${updateError}"/>
         <span th:text="${updateOk}"/>
 
+        <div class="form-group">
+            <label for="userTrack" class="col-sm-4 control-label">Track order activity(username):</label>
+            <div class="col-sm-811">
+                <input type="text" name="userTrack" id="userTrack" class="form-control"/>
+            </div>
+        </div>
+        <input type="submit" class="button" name="trackUser" value="TrackUser"/>
+
+        <h2>ActivityTrack:</h2>
+        <table border="1" >
+            <thead>
+            <tr>
+                <th>ProductName</th>
+                <th>ProductPrice</th>
+                <th>ProductStock</th>
+                <th>Quantity</th>
+                <th>CommandOrderId</th>
+                <th>ArrivalDate</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="productOrder : ${productOrders}">
+                <td th:text="${productOrder.product.name}"></td>
+                <td th:text="${productOrder.product.price}"></td>
+                <td th:text="${productOrder.product.stock}"></td>
+                <td th:text="${productOrder.quantity}"></td>
+                <td th:text="${productOrder.commandOrder.id}"></td>
+                <td th:text="${productOrder.commandOrder.expectedArrivalDate}"></td>
+
+            </tr>
+        </table>
+
 
 
 

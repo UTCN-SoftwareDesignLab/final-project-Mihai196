@@ -64,4 +64,14 @@ public class ProductOrder {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "OrderId { " + id +
+                ", product=" + product.getName() +
+                ", client=" + client.getUsername() +
+                ", onDate=" + commandOrder.getExpectedArrivalDate() +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
