@@ -17,11 +17,14 @@ import java.util.Optional;
 @Service
 public class CreditCardServiceImpl implements CreditCardService{
 
-    @Autowired
     private CreditCardRepository creditCardRepository;
-    @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    public CreditCardServiceImpl(CreditCardRepository creditCardRepository, UserRepository userRepository) {
+        this.creditCardRepository = creditCardRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Notification<Boolean> addCreditCard(Long clientId, double balance, String bankName, Long cardNr) {

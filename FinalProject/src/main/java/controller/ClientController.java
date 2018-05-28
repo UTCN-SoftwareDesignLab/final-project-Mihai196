@@ -191,6 +191,14 @@ public class ClientController {
         model.addAttribute("creditCards", creditCards);
         return "creditCardMenu";
     }
+    @RequestMapping(value = "/creditCardMenu", params = "deleteCreditCard", method = RequestMethod.POST)
+    public String deleteCreditCard(Model model, @ModelAttribute("creditCardDTO") CreditCardDTO creditCardDTO) {
+        model.addAttribute("creditCardDTO", new CreditCardDTO());
+        creditCardService.deleteCreditCard(creditCardDTO.getId());
+        model.addAttribute("notification","Credit card was deleted successfully");
+        return "creditCardMenu";
+    }
+
     @RequestMapping(value = "/productOrderMenu", params = "finalizeCommand", method = RequestMethod.POST)
     public String finalizeCommand(Model model, HttpServletRequest request,@RequestParam("dropOperator") String creditCardIdd) {
         System.out.println(creditCardIdd.length());
@@ -214,7 +222,7 @@ public class ClientController {
 
             String allErrors = "";
             Notification<CommandOrder> commandOrderNotification =
-                    commandOrderService.addCommandOrder(new java.sql.Date(System.currentTimeMillis()), "FANCourier");
+                    commandOrderService.addCommandOrder(new java.sql.Date(System.currentTimeMillis()+2*86400000), "FANCourier");
             CommandOrder commandOrder = commandOrderNotification.getResult();
             for (ProductOrder productOrder : productOrders) {
                 Notification<Boolean> orderNotification = productOrderService.addProductOrder(productOrder.getProduct().getId(),
@@ -271,6 +279,14 @@ public class ClientController {
         User loggedUser = usersByUsername.get(0);
         List<Rating> ratings = ratingService.findByClient(loggedUser);
         model.addAttribute("reviews", ratings);
+        return "ratingMenu";
+    }
+    @RequestMapping(value="/ratingMenu",params = "viewRatingsProduct",method = RequestMethod.POST)
+    public String viewRatingsProduct(Model model,@RequestParam("name") String prodName)
+    {
+        List<Rating> ratings=ratingService.findAllRatings();
+        List<Rating> ratingsStream=ratings.stream().filter(e->e.getProduct().getName().equals(prodName)).collect(Collectors.toList());
+        model.addAttribute("reviews", ratingsStream);
         return "ratingMenu";
     }
 
@@ -344,13 +360,6 @@ public class ClientController {
             // item will not contain a video ID.
             if (rId.getKind().equals("youtube#video")) {
                 Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-
-               /* System.out.println(" Video Id" + rId.getVideoId());
-                System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
-                System.out.println(" Thumbnail: " + thumbnail.getUrl());
-                System.out.println(" VideoURL: " + "https://www.youtube.com/watch?v="+rId.getVideoId());
-                System.out.println("\n-------------------------------------------------------------\n");*/
-
                 String link="https://www.youtube.com/watch?v="+rId.getVideoId();
                 String title=singleVideo.getSnippet().getTitle();
                 SearchYoutube searchYoutube=new SearchYoutube(link,title);

@@ -93,8 +93,9 @@ p{margin-bottom:.3em;}
         <th>Id</th>
         <th>ProductId</th>
         <th>ProductName</th>
+        <th>Username</th>
         <th>ReviewDescription</th>
-        <th>Value</th>
+        <th>Stars</th>
     </tr>
     </thead>
     <tbody>
@@ -102,6 +103,7 @@ p{margin-bottom:.3em;}
         <td th:text="${review.id}"></td>
         <td th:text="${review.product.id}"></td>
         <td th:text="${review.product.name}"></td>
+        <td th:text="${review.client.username}"></td>
         <td th:text="${review.description}"></td>
         <td th:text="${review.value}"></td>
     </tr>
@@ -137,6 +139,7 @@ p{margin-bottom:.3em;}
 
     <input type="submit" class="button" name="addRating" value="AddReview" />
     <input type="submit" class="button" name="viewRatings" value="ViewYourReviews" />
+    <input type="submit" class="button" name="viewRatingsProduct" value="ViewReviewsForProduct"/>
 </form>
 </body>
 </html>

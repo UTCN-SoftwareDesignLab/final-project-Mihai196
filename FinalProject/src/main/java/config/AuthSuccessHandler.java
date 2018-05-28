@@ -1,5 +1,6 @@
 package config;
 
+import model.Constants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -16,9 +17,9 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         String role = auth.getAuthorities().toString();
 
         String targetUrl = "";
-        if (role.contains("administrator")) targetUrl = "/userOps";
-        else if (role.contains("employee")) targetUrl = "/employee";
-        else if (role.contains("client"))
+        if (role.contains(Constants.Roles.ADMINISTRATOR)) targetUrl = "/userOps";
+        else if (role.contains(Constants.Roles.EMPLOYEE)) targetUrl = "/employee";
+        else if (role.contains(Constants.Roles.CLIENT))
             targetUrl = "/clientMenu";
         return targetUrl;
     }
