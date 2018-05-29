@@ -16,12 +16,15 @@ import java.util.Optional;
 
 @Service
 public class RatingServiceImpl implements RatingService {
-    @Autowired
-    private RatingRepository ratingRepository;
 
-    @Autowired
+    private RatingRepository ratingRepository;
     private ProductRepository productRepository;
 
+    @Autowired
+    public RatingServiceImpl(RatingRepository ratingRepository, ProductRepository productRepository) {
+        this.ratingRepository = ratingRepository;
+        this.productRepository = productRepository;
+    }
 
     @Override
     public Notification<Boolean> addRating(User client, String productName, int value, String description) {
